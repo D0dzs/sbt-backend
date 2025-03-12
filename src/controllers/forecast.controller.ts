@@ -3,6 +3,21 @@ import { Request, Response } from "express";
 import { ResponseFormat } from "../interface/IForecastResponse";
 
 const currentDate = new Date();
+
+const options = { timeZone: "Europe/Budapest" };
+const hungaryTime = new Date(
+  new Intl.DateTimeFormat("en-US", {
+    ...options,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: false,
+  }).format(currentDate),
+);
+
 const API_URL = "https://api.forecast.solar/estimate/watts/47.475498098/19.05333312/0/0/2.1";
 
 const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
@@ -22,7 +37,7 @@ const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
       }
     });
 
-    const latestForecast = ctx.filter((value) => value.epoch <= currentDate.getTime()).reverse()[0];
+    const latestForecast = ctx.filter((value) => value.epoch <= hungaryTime.getTime()).reverse()[0];
     if (!latestForecast) {
       return res
         .status(429)

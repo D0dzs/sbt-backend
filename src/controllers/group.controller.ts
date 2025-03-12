@@ -51,6 +51,7 @@ const requestGroup = async (req: Request, res: Response): Promise<any> => {
             position: true,
             user: {
               select: {
+                id: true,
                 lastName: true,
                 firstName: true,
                 avatarURL: true,
@@ -77,6 +78,7 @@ const requestGroup = async (req: Request, res: Response): Promise<any> => {
             const subGroupLeader = await prisma.user.findUnique({
               where: { id: subGroup.leaderID },
               select: {
+                id: true,
                 lastName: true,
                 firstName: true,
                 avatarURL: true,
@@ -98,6 +100,7 @@ const requestGroup = async (req: Request, res: Response): Promise<any> => {
                 position: true,
                 User: {
                   select: {
+                    id: true,
                     lastName: true,
                     firstName: true,
                     avatarURL: true,
@@ -252,15 +255,9 @@ const removeUserFromGroup = async (req: Request, res: Response): Promise<any> =>
     return res.status(400).json({ errors });
   }
 
-  const { firstName, lastName, avatarURL, group, isItSubGroup } = parsed.data;
+  const { id, firstName, lastName, group, isItSubGroup } = parsed.data;
   if (isItSubGroup) {
     try {
-      const cUserID = await prisma.user.findFirst({
-        where: { AND: [{ firstName }, { lastName }, { avatarURL }] },
-        select: { id: true },
-      });
-      if (!cUserID) return res.status(404).json({ message: "Felhasználó nem található!" });
-
       const cGroupID = await prisma.subGroup.findFirst({
         where: { name: group },
         select: { id: true },
@@ -270,7 +267,7 @@ const removeUserFromGroup = async (req: Request, res: Response): Promise<any> =>
       const response = await prisma.subGroupRole.delete({
         where: {
           userId_subGroupID: {
-            userId: cUserID.id,
+            userId: id,
             subGroupID: cGroupID.id,
           },
         },
@@ -283,12 +280,6 @@ const removeUserFromGroup = async (req: Request, res: Response): Promise<any> =>
     }
   } else {
     try {
-      const cUserID = await prisma.user.findFirst({
-        where: { AND: [{ firstName }, { lastName }, { avatarURL }] },
-        select: { id: true },
-      });
-      if (!cUserID) return res.status(404).json({ message: "Felhasználó nem található" });
-
       const cGroupID = await prisma.group.findFirst({
         where: { name: group },
         select: { id: true },
@@ -298,7 +289,7 @@ const removeUserFromGroup = async (req: Request, res: Response): Promise<any> =>
       const response = await prisma.groupRole.delete({
         where: {
           userID_groupID: {
-            userID: cUserID.id,
+            userID: id,
             groupID: cGroupID.id,
           },
         },
