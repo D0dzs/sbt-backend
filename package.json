@@ -4,7 +4,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon ./src/index.ts",
-    "setupProjekt": "mkdir images && mkdir images\\s images\\u && pnpx prisma migrate dev --name \"init\""
+    "setupProjekt": "mkdir images && mkdir images\\s images\\u && pnpx prisma migrate dev --name \"init\"",
+    "build": "tsc",
+    "start": "node ./dist/src/index.js"
   },
   "dependencies": {
     "@prisma/client": "6.3.1",
