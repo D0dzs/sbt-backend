@@ -41,12 +41,12 @@ const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
     if (!latestForecast) {
       return res
         .status(429)
-        .json({ message: "We are unable to fetch the latest forecast!", epoch: currentDate.getTime(), value: null });
+        .json({ message: "We are unable to fetch the latest forecast!", epoch: hungaryTime.getTime(), value: null });
     } else {
       return res.status(200).json(latestForecast);
     }
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error", epoch: currentDate.getTime(), value: null });
+    return res.status(500).json({ message: "Internal server error", epoch: hungaryTime.getTime(), value: null });
   }
 };
 
