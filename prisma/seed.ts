@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 
 const SALT = parseInt(process.env.SALT!);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
-const WRITER_PASSWORD = process.env.WRITER_PASSWORD!;
 
 async function main() {
   // Insert roles
@@ -37,23 +36,20 @@ async function main() {
     console.log(`Sponsor group "${group}" seeded successfully`);
   }
 
-  // Fetch the ADMIN and WRITER role IDs
+  // Fetch the ADMIN role ID
   const adminRole = await prisma.role.findUnique({ where: { name: "admin" }, select: { id: true } });
-  const writerRole = await prisma.role.findUnique({ where: { name: "writer" }, select: { id: true } });
 
-  if (!adminRole || !writerRole) throw new Error("'admin' or 'writer' role not found");
+  if (!adminRole) throw new Error("'admin' role not found");
 
   // Check if admin user already exists
   const adminUserExists = await prisma.user.findUnique({ where: { email: "admin@test.hu" }, select: { id: true } });
-  const writerUserExists = await prisma.user.findUnique({ where: { email: "writer@test.hu" }, select: { id: true } });
 
-  if (adminUserExists && writerUserExists) {
-    console.log("Admin and Writer user already exists. Skipping seeding.");
+  if (adminUserExists) {
+    console.log("Admin user already exists. Skipping seeding.");
     return;
   }
 
   const adminHashedPassword = await bcrypt.hash(ADMIN_PASSWORD, SALT);
-  const writerHashedPassword = await bcrypt.hash(WRITER_PASSWORD, SALT);
 
   // Create admin user and assign ADMIN role
   const adminUser = await prisma.user.upsert({
@@ -74,28 +70,7 @@ async function main() {
     },
   });
 
-  // Create writer user and assign WRITER role
-  const writerUser = await prisma.user.upsert({
-    where: { email: "writer@test.hu" },
-    update: {},
-    create: {
-      email: "writer@test.hu",
-      password: writerHashedPassword,
-      firstName: "Writer",
-      lastName: "User",
-      UserRole: {
-        create: {
-          role: {
-            connect: { id: writerRole.id },
-          },
-        },
-      },
-    },
-  });
-
-  console.log(
-    "\nAdmin and Writer users seeded successfully\n\nUsername: admin@test.hu\nPassword: admin\n\nUsername: writer@test.hu\nPassword: writer",
-  );
+  console.log("\nAdmin user seeded successfully\n\nUsername: admin@test.hu\nPassword: admin\n");
 
   // create template posts
   const createPost = await prisma.post.create({
@@ -109,18 +84,7 @@ async function main() {
     },
   });
 
-  const createSecondPost = await prisma.post.create({
-    data: {
-      title: "Second Post",
-      slug: "second-post",
-      content: "This is the second post.",
-      shortDesc: "This is the second post.",
-      publishedAt: new Date(),
-      publishedById: writerUser.id,
-    },
-  });
-
-  if (createPost && createSecondPost) {
+  if (createPost) {
     console.log("\nPosts seeded successfully");
   }
 }
