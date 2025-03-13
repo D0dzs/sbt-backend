@@ -32,7 +32,7 @@ import memoizee from "memoizee";
 
 const memoizedForecast = memoizee(
   async (URL: string) => {
-    console.log(`[DEBUG] Cache miss - Fetching from endpoint: ${URL}`);
+    // console.log(`[DEBUG] Cache miss - Fetching from endpoint: ${URL}`);
     const response = await fetch(URL);
     const data = await response.json();
     return data;
@@ -44,15 +44,15 @@ const memoizedForecast = memoizee(
     normalizer: () => {
       const now = new Date();
       const key = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-      console.log(`[DEBUG] Normalizer called, cache key: ${key}`);
+      // console.log(`[DEBUG] Normalizer called, cache key: ${key}`);
       return key;
     },
-    dispose: (value: any) => {
-      console.log(`[DEBUG] Cache entry expired`);
-    },
+    // dispose: (value: any) => {
+    // console.log(`[DEBUG] Cache entry expired`);
+    // },
     resolvers: [
       function (result) {
-        console.log("[DEBUG] Cache hit - Using cached result");
+        // console.log("[DEBUG] Cache hit - Using cached result");
         return result;
       },
     ],
