@@ -1,26 +1,13 @@
-import { memoizedForecast } from "../../lib/utils";
+import { getHungaryTime, memoizedForecast } from "../../lib/utils";
 import { Request, Response } from "express";
 import { ResponseFormat } from "../interface/IForecastResponse";
-
-const currentDate = new Date();
-
-const options = { timeZone: "Europe/Budapest" };
-const hungaryTime = new Date(
-  new Intl.DateTimeFormat("en-US", {
-    ...options,
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hour12: false,
-  }).format(currentDate),
-);
 
 const API_URL = "https://api.forecast.solar/estimate/watts/47.475498098/19.05333312/0/0/2.1";
 
 const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
+  const currentDate = new Date();
+  const hungaryTime = getHungaryTime().getTime();
+
   try {
     const response = await memoizedForecast(API_URL);
 
@@ -37,16 +24,16 @@ const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
       }
     });
 
-    const latestForecast = ctx.filter((value) => value.epoch <= hungaryTime.getTime()).reverse()[0];
+    const latestForecast = ctx.filter((value) => value.epoch <= hungaryTime).reverse()[0];
     if (!latestForecast) {
       return res
         .status(429)
-        .json({ message: "We are unable to fetch the latest forecast!", epoch: hungaryTime.getTime(), value: null });
+        .json({ message: "We are unable to fetch the latest forecast!", epoch: hungaryTime, value: "N/A" });
     } else {
       return res.status(200).json(latestForecast);
     }
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error", epoch: hungaryTime.getTime(), value: null });
+    return res.status(500).json({ message: "Internal server error", epoch: hungaryTime, value: "N/A" });
   }
 };
 
