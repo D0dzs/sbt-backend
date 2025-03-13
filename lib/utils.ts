@@ -32,19 +32,39 @@ import memoizee from "memoizee";
 
 const memoizedForecast = memoizee(
   async (URL: string) => {
+    // console.log(`[DEBUG] Cache miss - Fetching from endpoint: ${URL}`);
     const response = await fetch(URL);
     const data = await response.json();
     return data;
   },
   {
     promise: true,
-    maxAge: 2 * 60 * 60 * 1000,
-    preFetch: true,
+    maxAge: 1.01 * 60 * 60 * 1000,
+    preFetch: 1,
     normalizer: () => {
       const now = new Date();
-      return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      const key = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      // console.log(`[DEBUG] Normalizer called, cache key: ${key}`);
+      return key;
     },
+    // dispose: (value: any) => {
+    // console.log(`[DEBUG] Cache entry expired`);
+    // },
+    resolvers: [
+      function (result) {
+        // console.log("[DEBUG] Cache hit - Using cached result");
+        return result;
+      },
+    ],
   },
 );
 
-export { userRole, generateToken, generateRefresh, generateUID, memoizedForecast };
+const getHungaryTime = () => {
+  const now = new Date();
+  const options = { timeZone: "Europe/Budapest" };
+  const hungaryTimeStr = now.toLocaleString("en-US", options);
+  const hungaryTime = new Date(hungaryTimeStr);
+  return hungaryTime;
+};
+
+export { userRole, generateToken, generateRefresh, generateUID, memoizedForecast, getHungaryTime };
