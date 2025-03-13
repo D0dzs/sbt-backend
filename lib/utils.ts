@@ -38,7 +38,7 @@ const memoizedForecast = memoizee(
   },
   {
     promise: true,
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 2 * 60 * 60 * 1000,
     preFetch: true,
     normalizer: () => {
       const now = new Date();
