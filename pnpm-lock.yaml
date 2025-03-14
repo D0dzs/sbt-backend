@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@prisma/client':
-        specifier: 6.3.1
-        version: 6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
+        specifier: 6.5.0
+        version: 6.5.0(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
       '@prisma/extension-optimize':
         specifier: ^1.1.4
-        version: 1.1.4(@prisma/client@6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3))
+        version: 1.1.4(@prisma/client@6.5.0(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3))
       '@prisma/instrumentation':
         specifier: ^6
         version: 6.3.1(@opentelemetry/api@1.9.0)
@@ -183,8 +183,8 @@ packages:
     resolution: {integrity: sha512-lp4qAiMTD4sNWW4DbKLBkfiMZ4jbAboJIGOQr5DvciMRI494OapieI9qiODpOt0XBr1LjIDy1xAGAnVs5supTA==}
     engines: {node: '>=14'}
 
-  '@prisma/client@6.3.1':
-    resolution: {integrity: sha512-ARAJaPs+eBkemdky/XU3cvGRl+mIPHCN2lCXsl5Vlb0E2gV+R6IN7aCI8CisRGszEZondwIsW9Iz8EJkTdykyA==}
+  '@prisma/client@6.5.0':
+    resolution: {integrity: sha512-M6w1Ql/BeiGoZmhMdAZUXHu5sz5HubyVcKukbLs3l0ELcQb8hTUJxtGEChhv4SVJ0QJlwtLnwOLgIRQhpsm9dw==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -1311,7 +1311,7 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.28.0': {}
 
-  '@prisma/client@6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)':
+  '@prisma/client@6.5.0(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)':
     optionalDependencies:
       prisma: 6.3.1(typescript@5.7.3)
       typescript: 5.7.3
@@ -1329,7 +1329,7 @@ snapshots:
       '@prisma/fetch-engine': 6.3.1
       '@prisma/get-platform': 6.3.1
 
-  '@prisma/extension-optimize@1.1.4(@prisma/client@6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3))':
+  '@prisma/extension-optimize@1.1.4(@prisma/client@6.5.0(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3))':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/context-async-hooks': 1.30.1(@opentelemetry/api@1.9.0)
@@ -1337,7 +1337,7 @@ snapshots:
       '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.22.0
-      '@prisma/client': 6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
+      '@prisma/client': 6.5.0(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
       '@prisma/debug': 5.19.1
       kleur: 4.1.5
       prisma-instrumentation-5-x: '@prisma/instrumentation@5.19.1'

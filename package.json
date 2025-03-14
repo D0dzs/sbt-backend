@@ -9,7 +9,7 @@
     "start": "node ./dist/src/index.js"
   },
   "dependencies": {
-    "@prisma/client": "6.3.1",
+    "@prisma/client": "6.5.0",
     "@prisma/extension-optimize": "^1.1.4",
     "@prisma/instrumentation": "^6",
     "bcrypt": "^5.1.1",
