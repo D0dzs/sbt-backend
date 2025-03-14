@@ -2,7 +2,7 @@ import "dotenv/config";
 import redisClient from "./redis";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-import { ResponseFormat } from "../src/interface/IForecastResponse";
+import { IForecast } from "../src/interface/IForecastResponse";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
@@ -36,7 +36,7 @@ const updateRedisForecast = async (URL: string) => {
     const response = await fetch(URL);
     const data = (await response.json()) as { result: Record<string, number> };
     const forecastEntries = Object.entries(data.result);
-    const ctx: ResponseFormat[] = [];
+    const ctx: IForecast[] = [];
 
     forecastEntries.forEach(([timestamp, value]) => {
       const unixTT = new Date(timestamp);
