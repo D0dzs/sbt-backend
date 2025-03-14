@@ -7,7 +7,6 @@ const SALT = parseInt(process.env.SALT!);
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!;
 
 async function main() {
-  // Insert roles
   const roles = ["admin", "writer"];
   for (const role of roles) {
     await prisma.role.upsert({
@@ -33,22 +32,16 @@ async function main() {
     console.log(`Sponsor group "${group}" seeded successfully`);
   }
 
-  // Fetch the ADMIN role ID
   const adminRole = await prisma.role.findUnique({ where: { name: "admin" }, select: { id: true } });
-
   if (!adminRole) throw new Error("'admin' role not found");
 
-  // Check if admin user already exists
   const adminUserExists = await prisma.user.findUnique({ where: { email: "admin@test.hu" }, select: { id: true } });
-
   if (adminUserExists) {
     console.log("Admin user already exists. Skipping seeding.");
     return;
   }
 
   const adminHashedPassword = await bcrypt.hash(ADMIN_PASSWORD, SALT);
-
-  // Create admin user and assign ADMIN role
   const adminUser = await prisma.user.upsert({
     where: { email: "admin@test.hu" },
     update: {},
@@ -66,10 +59,8 @@ async function main() {
       },
     },
   });
-
   console.log("\nAdmin user seeded successfully\n\nUsername: admin@test.hu\nPassword: [SEE ENV] \n");
 
-  // create template posts
   const createPost = await prisma.post.create({
     data: {
       title: "First Post",
