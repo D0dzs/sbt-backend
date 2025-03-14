@@ -34,7 +34,7 @@ const updateRedisForecast = async (URL: string) => {
 
   try {
     const response = await fetch(URL);
-    const data: { result: Record<string, number> } = response as any;
+    const data = (await response.json()) as { result: Record<string, number> };
     const forecastEntries = Object.entries(data.result);
     const ctx: ResponseFormat[] = [];
 

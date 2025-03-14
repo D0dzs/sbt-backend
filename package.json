@@ -6,7 +6,7 @@
     "dev": "nodemon ./src/index.ts",
     "setupImageFolder": "mkdir images && mkdir images\\s images\\u",
     "build": "tsc",
-    "start": "node ./dist/src/index.js"
+    "start": "node --omit=dev ./dist/src/index.js"
   },
   "dependencies": {
     "@prisma/client": "6.5.0",

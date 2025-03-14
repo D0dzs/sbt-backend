@@ -10,6 +10,8 @@ import { updateRedisForecast } from "../lib/utils";
 const API_URL = "https://api.forecast.solar/estimate/watts/47.475498098/19.05333312/0/0/2.1";
 cron.schedule("0 */1 * * *", () => updateRedisForecast(API_URL));
 
+updateRedisForecast(API_URL);
+
 /*
   This section sets up the Express server.
 */
