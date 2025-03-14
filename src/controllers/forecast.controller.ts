@@ -1,18 +1,15 @@
-import { getHungaryTime, memoizedForecast } from "../../lib/utils";
+import { getHungaryTime } from "../../lib/utils";
 import { Request, Response } from "express";
 import { ResponseFormat } from "../interface/IForecastResponse";
-
-const API_URL = "https://api.forecast.solar/estimate/watts/47.475498098/19.05333312/0/0/2.1";
+import redisClient from "../../lib/redis";
 
 const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
-  const currentDate = new Date();
-  const hungaryTime = getHungaryTime().getTime();
-
   try {
-    const response = await memoizedForecast(API_URL);
+    const currentDate = new Date();
+    const hungaryTime = getHungaryTime().getTime();
+    const forecastCache = await redisClient.get("forecast");
 
-    // We're asserting the structure of the API response
-    const data: { result: Record<string, number> } = response as any;
+    const data: { result: Record<string, number> } = forecastCache as any;
     const forecastEntries = Object.entries(data.result);
     const ctx: ResponseFormat[] = [];
 
@@ -20,20 +17,18 @@ const getLatestForecast = async (req: Request, res: Response): Promise<any> => {
       const unixTT = new Date(timestamp);
       const epoch = unixTT.getTime();
       if (unixTT.getUTCDate() === currentDate.getUTCDate()) {
-        ctx.push({ epoch, value });
+        ctx.push({ tt: timestamp, epoch, value });
       }
     });
 
-    const latestForecast = ctx.filter((value) => value.epoch <= hungaryTime).reverse()[0];
-    if (!latestForecast) {
-      return res
-        .status(429)
-        .json({ message: "We are unable to fetch the latest forecast!", epoch: hungaryTime, value: "N/A" });
-    } else {
-      return res.status(200).json(latestForecast);
-    }
+    const latestforecast = ctx.filter((value) => value.epoch <= hungaryTime).reverse()[0];
+    if (!latestforecast)
+      return res.status(404).json({ error: "Forecast not found", value: "N/A", tt: undefined, epoch: undefined });
+
+    return res.status(200).json({ tt: latestforecast.tt, value: latestforecast.value, epoch: latestforecast.epoch });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error", epoch: hungaryTime, value: "N/A" });
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error", value: "N/A", tt: undefined, epoch: undefined });
   }
 };
 

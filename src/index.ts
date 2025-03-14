@@ -1,6 +1,18 @@
 import "dotenv/config";
 const PORT = process.env.PORT!;
 
+/*
+  This section updates the Redis forecast cache every hour.
+*/
+import cron from "node-cron";
+import { updateRedisForecast } from "../lib/utils";
+
+const API_URL = "https://api.forecast.solar/estimate/watts/47.475498098/19.05333312/0/0/2.1";
+cron.schedule("0 */1 * * *", () => updateRedisForecast(API_URL));
+
+/*
+  This section sets up the Express server.
+*/
 import cors from "cors";
 import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
@@ -16,12 +28,7 @@ import imageRouter from "./routers/imageProvider.router";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  }),
-);
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -32,7 +39,6 @@ app.use("/api/group", groupRouter);
 app.use("/api/subgroup", subGroupRouter);
 app.use("/api/users", userRouter);
 app.use("/api/forecast", forecastRouter);
-
 app.get("/cdn/:path/:filename", imageRouter);
 
 app.get("/api", (req: Request, res: Response) => {
