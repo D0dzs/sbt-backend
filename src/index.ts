@@ -8,7 +8,9 @@ import cron from "node-cron";
 import { updateRedisForecast } from "../lib/utils";
 
 const API_URL = "https://api.forecast.solar/estimate/watts/47.475498098/19.05333312/0/0/2.1";
-cron.schedule("0 */1 * * *", () => updateRedisForecast(API_URL));
+cron.schedule("0 3 * * *", () => updateRedisForecast(API_URL), {
+  timezone: "Europe/Budapest",
+});
 
 updateRedisForecast(API_URL);
 

@@ -44,7 +44,8 @@ const updateRedisForecast = async (URL: string) => {
       ctx.push({ tt: timestamp, epoch, value });
     });
 
-    await redisClient.set("forecast", JSON.stringify(ctx));
+    // The key-value-pair only last for a day
+    await redisClient.set("forecast", JSON.stringify(ctx), "EX", 24 * 60 * 60);
   } catch (error) {
     console.warn("Failed to update redis forecast!");
     console.error(error);
