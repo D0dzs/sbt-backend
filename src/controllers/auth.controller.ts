@@ -53,13 +53,13 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
     if (!recordRFTtoDb) return res.status(500).json({ message: "Internal server error" });
 
-    res.cookie("token", token, {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: false,
-      path: "/",
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      maxAge: 45 * 60 * 1000,
-    });
+    // res.cookie("token", token, {
+    //   secure: process.env.NODE_ENV === "production",
+    //   httpOnly: false,
+    //   path: "/",
+    //   sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    //   maxAge: 45 * 60 * 1000,
+    // });
 
     res.cookie("refreshToken", refreshToken, {
       secure: process.env.NODE_ENV === "production",
@@ -144,13 +144,13 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
 
       if (!ctx) return res.status(500).json({ message: "Internal Server Error" });
 
-      res.cookie("token", newAccessToken, {
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        path: "/",
-        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-        maxAge: 45 * 60 * 1000,
-      });
+      // res.cookie("token", newAccessToken, {
+      //   secure: process.env.NODE_ENV === "production",
+      //   httpOnly: true,
+      //   path: "/",
+      //   sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      //   maxAge: 45 * 60 * 1000,
+      // });
 
       res.cookie("refreshToken", newRefreshToken, {
         secure: process.env.NODE_ENV === "production",
@@ -172,7 +172,7 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
 
 const logout = async (req: Request, res: Response): Promise<any> => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", { path: "/api" });
     res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
 
     return res.status(200).json({ message: "Sikeres kijelentkezés!", redirect: "/" });
