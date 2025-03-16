@@ -53,18 +53,17 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
     if (!recordRFTtoDb) return res.status(500).json({ message: "Internal server error" });
 
-    // res.cookie("token", token, {
-    // secure: process.env.NODE_ENV === "production",
-    // httpOnly: true,
-    // path: "/",
-    // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-    // maxAge: 45 * 60 * 1000,
-    // });
+    res.cookie("token", token, {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 45 * 60 * 1000,
+    });
 
     res.cookie("refreshToken", refreshToken, {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+      sameSite: "none",
       path: "/api/auth/refresh",
       // valid for 5 days
       maxAge: 5 * 24 * 60 * 60 * 1000,
@@ -144,13 +143,12 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
 
       if (!ctx) return res.status(500).json({ message: "Internal Server Error" });
 
-      // res.cookie("token", newAccessToken, {
-      // secure: process.env.NODE_ENV === "production",
-      // httpOnly: true,
-      // path: "/",
-      // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      // maxAge: 45 * 60 * 1000,
-      // });
+      res.cookie("token", newAccessToken, {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 45 * 60 * 1000,
+      });
 
       res.cookie("refreshToken", newRefreshToken, {
         secure: process.env.NODE_ENV === "production",
