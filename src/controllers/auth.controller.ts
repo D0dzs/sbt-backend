@@ -57,7 +57,7 @@ const login = async (req: Request, res: Response): Promise<any> => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      path: "/api",
+      path: "/",
       maxAge: 45 * 60 * 1000,
     });
 
@@ -147,7 +147,7 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        path: "/api",
+        path: "/",
         maxAge: 45 * 60 * 1000,
       });
 
@@ -171,7 +171,7 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
 
 const logout = async (req: Request, res: Response): Promise<any> => {
   try {
-    res.clearCookie("token", { path: "/api" });
+    res.clearCookie("token", { path: "/" });
     res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
 
     return res.status(200).json({ message: "Sikeres kijelentkezés!", redirect: "/" });
