@@ -54,18 +54,18 @@ const login = async (req: Request, res: Response): Promise<any> => {
     if (!recordRFTtoDb) return res.status(500).json({ message: "Internal server error" });
 
     res.cookie("token", token, {
-      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
+      secure: true,
       sameSite: "none",
+      path: "/api",
       maxAge: 45 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
       sameSite: "none",
       path: "/api/auth/refresh",
-      // valid for 5 days
       maxAge: 5 * 24 * 60 * 60 * 1000,
     });
 
@@ -144,17 +144,18 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
       if (!ctx) return res.status(500).json({ message: "Internal Server Error" });
 
       res.cookie("token", newAccessToken, {
-        secure: process.env.NODE_ENV === "production",
         httpOnly: true,
+        secure: true,
         sameSite: "none",
+        path: "/api",
         maxAge: 45 * 60 * 1000,
       });
 
       res.cookie("refreshToken", newRefreshToken, {
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         httpOnly: true,
+        sameSite: "none",
         path: "/api/auth/refresh",
-        sameSite: "strict",
         maxAge: 5 * 24 * 60 * 60 * 1000,
       });
 
@@ -170,7 +171,7 @@ const validateToken = async (req: Request, res: Response): Promise<any> => {
 
 const logout = async (req: Request, res: Response): Promise<any> => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", { path: "/api" });
     res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
 
     return res.status(200).json({ message: "Sikeres kijelentkezés!", redirect: "/" });
