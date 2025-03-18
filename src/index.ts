@@ -32,7 +32,7 @@ import imageRouter from "./routers/imageProvider.router";
 
 const app = express();
 
-app.use(cors({ origin: "https://sbt-frontend-development.up.railway.app", credentials: true }));
+// app.use(cors({ origin: "https://sbt-frontend-development.up.railway.app", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
